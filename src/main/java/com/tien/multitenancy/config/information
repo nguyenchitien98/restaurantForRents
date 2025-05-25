@@ -1,0 +1,42 @@
+💡 Tổng quan kiến trúc multi-tenant theo schema (SCHEMA-based isolation)
+Trong cấu trúc bạn đang dùng:
+
+1 schema trung tâm: central_db – chứa user, metadata, mapping tenant ID
+
+N schema tenant: restaurant_001, restaurant_002, ..., restaurant_9999
+
+→ Ứng dụng cần biết schema nào tương ứng với tenant nào, và switch schema khi xử lý DB.
+
+🧠 Cách hệ thống chuyển schema động:
+Có class SchemaMultiTenantConnectionProvider với đoạn:
+
+@Override
+public Connection getConnection(Object tenantIdentifier) throws SQLException {
+    final Connection connection = dataSource.getConnection(); // dùng từ pool đã tạo
+    connection.setSchema((String) tenantIdentifier);          // ← ⚠️ đổi schema tại đây
+    return connection;
+}
+
+🧩 Nên hiểu:
+dataSource.getConnection() → mở 1 connection đang trỏ về public (hoặc central_db)
+
+connection.setSchema("restaurant_001") → đổi schema của connection này trước khi dùng
+
+Hibernate sẽ dùng connection đã được gắn schema tenant đúng
+
+🔁 Flow đầy đủ khi gọi API:
+Bước	Mô tả
+1.	Client gọi API, gắn X-Tenant-ID: 001
+2.	TenantFilter đọc header → lưu vào TenantContext
+3.	Hibernate gọi SchemaCurrentTenantIdentifierResolver → trả về "restaurant_001"
+4.	Hibernate gọi SchemaMultiTenantConnectionProvider.getConnection("restaurant_001")
+5.	Lấy connection từ Hikari pool (đang default schema)
+6.	Gọi setSchema("restaurant_001") → chuyển schema đúng
+7.	Connection trả về Hibernate để dùng
+8.	Sau khi dùng xong, Hibernate gọi releaseConnection(...) → đóng / reuse
+
+✅ KHÔNG cần tạo pool cho từng schema
+Dùng 1 pool duy nhất kết nối tới central_db hoặc public
+Switch schema ở bước setSchema(...) là đủ (giống đổi database ở level session)
+Tăng performance, giảm memory/cost, scale tốt hơn nhiều
+
