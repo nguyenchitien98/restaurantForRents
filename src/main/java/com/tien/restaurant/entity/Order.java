@@ -2,10 +2,13 @@ package com.tien.restaurant.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.BatchSize;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+// Thêm @BatchSize(size = 50) vào các entity nếu dùng saveAll() hoặc nhiều insert/update.
+@BatchSize(size = 50)
 @Entity
 @Table(name = "orders")
 @Data

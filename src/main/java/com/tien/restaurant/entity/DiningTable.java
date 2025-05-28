@@ -3,6 +3,7 @@ package com.tien.restaurant.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+// Thêm @BatchSize(size = 50) vào các entity nếu dùng saveAll() hoặc nhiều insert/update.
 @Entity
 @Table(name = "tables")
 @Data
