@@ -20,14 +20,14 @@ public class RetentionJobService {
     private JdbcTemplate centralJdbc;
 
     @Autowired
-    private DataSource defaultDataSource;
+    private DataSource dataSource;
 
     private static final Logger log = LoggerFactory.getLogger(RetentionJobService.class);
 
     // Gửi thông báo nếu sắp đến hạn
     // Tên job	                Thời điểm chạy	        Điều kiện chính	                    Mục tiêu
     // notifyExpiringTenants()	Mỗi ngày 3h sáng	Tenant >= 2 năm, chưa được thông báo	Gửi cảnh báo dữ liệu sắp xóa
-//    @Scheduled(cron = "0 0 3 * * *") // 3h sáng mỗi ngày
+    @Scheduled(cron = "0 0 3 * * *") // 3h sáng mỗi ngày
     public void notifyExpiringTenants() {
         String sql = """
         SELECT t.tenant_id, t.schema_name, t.data_retention_years, t.created_at
@@ -72,7 +72,7 @@ public class RetentionJobService {
     // Tên job	                    Thời điểm chạy	        Điều kiện chính	                        Mục tiêu
     // emindFinalWarningTenants()	Mỗi ngày 8h sáng	  Đã được thông báo từ 23-29 ngày trước	    Nhắc mỗi ngày cho tới lúc xóa
     // Xoá dữ liệu sau 30 ngày nếu chưa nâng cấp
-//    @Scheduled(cron = "0 0 4 * * *") // 4h sáng mỗi ngày
+    @Scheduled(cron = "0 0 4 * * *") // 4h sáng mỗi ngày
     public void deleteExpiredData() {
         String sql = """
         SELECT r.tenant_id, t.schema_name, t.data_retention_years
@@ -90,7 +90,7 @@ public class RetentionJobService {
             String schema = (String) row.get("schema_name");
             int retentionYears = (int) row.get("data_retention_years");
 
-            try (Connection conn = defaultDataSource.getConnection()) {
+            try (Connection conn = dataSource.getConnection()) {
                 Statement stmt = conn.createStatement();
                 stmt.execute("USE " + schema);
                 int deleted = stmt.executeUpdate("DELETE FROM orders WHERE created_at < DATE_SUB(NOW(), INTERVAL " + retentionYears + " YEAR)");
@@ -113,7 +113,7 @@ public class RetentionJobService {
     //Tăng tỷ lệ nâng cấp dịch vụ (chuyển từ basic → premium/forever)
     //Đảm bảo bạn không bị khiếu nại sau khi xóa dữ liệu.
     // Chạy mỗi ngày, tìm các tenant đã được gửi thông báo trước đó từ 23 đến 29 ngày, và gửi nhắc nhở mỗi ngày cho đến lúc bị xóa.
-//    @Scheduled(cron = "0 0 8 * * *") // 8h sáng mỗi ngày
+    @Scheduled(cron = "0 0 8 * * *") // 8h sáng mỗi ngày
     public void remindFinalWarningTenants() {
         String sql = """
         SELECT r.tenant_id, t.schema_name, t.name, DATEDIFF(NOW(), r.notified_at) AS days_since_notify

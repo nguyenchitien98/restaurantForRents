@@ -17,7 +17,7 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        basePackages = "com.tien", // package chứa repository của bạn
+        basePackages = {"com.tien.restaurant.repository","com.tien.tenant.repository"}, // package chứa repository của bạn
         entityManagerFactoryRef = "entityManagerFactory",
         transactionManagerRef = "transactionManager"
 )
@@ -48,7 +48,7 @@ public class JpaConfig {
 
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
         emf.setDataSource(dataSource);
-        emf.setPackagesToScan("com.tien"); // đổi theo package entity
+        emf.setPackagesToScan("com.tien.restaurant.entity","com.tien.tenant.entity"); // đổi theo package entity
         emf.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         emf.setJpaPropertyMap(properties);
 

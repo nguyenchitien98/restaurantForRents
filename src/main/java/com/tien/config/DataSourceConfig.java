@@ -1,9 +1,11 @@
-package com.tien.multitenancy.config;
+package com.tien.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -12,6 +14,7 @@ import javax.sql.DataSource;
 public class DataSourceConfig {
 
     @Bean
+    @Primary // Tenant-aware DataSource
     public DataSource dataSource() {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:mysql://localhost:3306/central_db"); // default schema
@@ -25,6 +28,18 @@ public class DataSourceConfig {
     @Bean
     public JdbcTemplate tenantAwareJdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource); // dùng chung pool
+    }
+
+    // Đây là DataSource riêng cố định để truy vấn metadata ở central_db
+    @Bean(name = "centralDataSource") // Dành riêng cho central DB
+    public DataSource centralDataSource() {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/central_db");
+        config.setUsername("root");
+        config.setPassword("123456");
+        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        config.setMaximumPoolSize(5); // thấp vì chỉ dùng metadata
+        return new HikariDataSource(config);
     }
 
 //Hiểu bản chất vấn đề

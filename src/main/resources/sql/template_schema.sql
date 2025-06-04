@@ -58,3 +58,27 @@ CREATE TABLE customers (
                            email VARCHAR(255),
                            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Thiết bị
+CREATE TABLE peripheral_devices (
+                                    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                                    name VARCHAR(100) NOT NULL,
+                                    location nvarchar(100) NOT NULL,
+                                    type ENUM('printer', 'cash_drawer', 'customer_display') NOT NULL,
+                                    status ENUM('connected', 'disconnected', 'error') DEFAULT 'disconnected',
+                                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+-- Phương thức kết nối
+CREATE TABLE connection_strategies (
+                                       id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                                       device_id BIGINT NOT NULL,
+                                       connection_type ENUM('LAN', 'USB', 'AGENT') NOT NULL,
+                                       ip_address VARCHAR(100),
+                                       port INT,
+                                       agent_id VARCHAR(100),
+                                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+                                       CONSTRAINT fk_device FOREIGN KEY (device_id) REFERENCES peripheral_devices(id) ON DELETE CASCADE
+);
