@@ -2,9 +2,12 @@ package com.tien.restaurant.service;
 
 import com.tien.multitenancy.config.TenantContext;
 import com.tien.restaurant.dto.PeripheralDeviceDTO;
+import com.tien.restaurant.dto.request.ConnectionCheckRequest;
 import com.tien.restaurant.dto.request.CreatePeripheralDeviceRequest;
 import com.tien.restaurant.dto.request.UpdatePeripheralDeviceRequest;
 import com.tien.restaurant.entity.ConnectionStrategy;
+import com.tien.restaurant.entity.ConnectionType;
+import com.tien.restaurant.entity.DeviceStatus;
 import com.tien.restaurant.entity.PeripheralDevice;
 import com.tien.restaurant.mapper.PeripheralDeviceMapper;
 import com.tien.restaurant.repository.ConnectionStrategyRepository;
@@ -16,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -113,5 +117,31 @@ public class PeripheralDeviceService {
 
     public void deleteConnection(Long strategyId) {
         connectionRepository.deleteById(strategyId);
+    }
+
+    @Transactional
+    public Optional<PeripheralDevice> verifyAndUpdateDevice(ConnectionCheckRequest request) {
+        Optional<ConnectionStrategy> strategyOptional = Optional.empty();
+
+        if (request.getConnectionType() == ConnectionType.AGENT) {
+            strategyOptional = connectionRepository
+                    .findByConnectionTypeAndAgentId(ConnectionType.AGENT, request.getAgentId());
+        } else if (request.getConnectionType() == ConnectionType.LAN) {
+            strategyOptional = connectionRepository
+                    .findByConnectionTypeAndIpAddressAndPort(
+                            ConnectionType.LAN,
+                            request.getIpAddress(),
+                            request.getPort()
+                    );
+        }
+
+        if (strategyOptional.isEmpty()) return Optional.empty();
+
+        ConnectionStrategy strategy = strategyOptional.get();
+        PeripheralDevice device = strategy.getDevice();
+        device.setStatus(DeviceStatus.CONNECTED);
+        deviceRepository.save(device);
+
+        return Optional.of(device);
     }
 }
