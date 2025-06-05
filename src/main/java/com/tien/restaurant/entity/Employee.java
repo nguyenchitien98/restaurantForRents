@@ -15,9 +15,15 @@ public class Employee {
 
     private String name;
 
-    private String role;
+    private String role; // eg: ADMIN, CASHIER, KITCHEN
 
+    @Column(unique = true)
     private String email;
 
     private String phone;
+
+    private String password; // Thêm vào để xác thực
+
+    @Column(name = "agent_id")
+    private String agentId;  // Mã thiết bị hợp lệ nếu cần ràng buộc
 }

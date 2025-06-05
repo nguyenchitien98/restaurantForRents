@@ -43,11 +43,13 @@ CREATE TABLE order_items (
 
 -- Nhân viên
 CREATE TABLE employees (
-                           id BIGINT PRIMARY KEY AUTO_INCREMENT,
-                           name VARCHAR(255),
-                           role VARCHAR(100),
-                           email VARCHAR(255),
-                           phone VARCHAR(20)
+                           id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                           name VARCHAR(100),
+                           role VARCHAR(50),
+                           email VARCHAR(100) UNIQUE,
+                           phone VARCHAR(20),
+                           password VARCHAR(255),
+                           agent_id VARCHAR(50),
 );
 
 -- Khách hàng

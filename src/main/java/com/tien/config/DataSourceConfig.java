@@ -2,11 +2,15 @@ package com.tien.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
+import org.springframework.orm.jpa.*;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -40,6 +44,25 @@ public class DataSourceConfig {
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setMaximumPoolSize(5); // thấp vì chỉ dùng metadata
         return new HikariDataSource(config);
+    }
+
+    //Tạo CentralEmployeeAccountRepository riêng sử dụng centralDataSource
+    @Bean(name = "centralEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean centralEntityManagerFactory(
+            EntityManagerFactoryBuilder builder,
+            @Qualifier("centralDataSource") DataSource centralDataSource) {
+
+        return builder
+                .dataSource(centralDataSource)
+                .packages("com.tien.restaurant.entity")
+                .persistenceUnit("central")
+                .build();
+    }
+
+    @Bean(name = "centralTransactionManager")
+    public PlatformTransactionManager centralTransactionManager(
+            @Qualifier("centralEntityManagerFactory") EntityManagerFactory factory) {
+        return new JpaTransactionManager(factory);
     }
 
 //Hiểu bản chất vấn đề
