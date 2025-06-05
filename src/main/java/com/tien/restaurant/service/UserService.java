@@ -7,7 +7,6 @@ import com.tien.restaurant.central.entity.EmployeeAccount;
 import com.tien.restaurant.mapper.EmployeeMapper;
 import com.tien.restaurant.central.repository.CentralEmployeeAccountRepository;
 import com.tien.restaurant.repository.EmployeeRepository;
-import com.tien.restaurant.repository.EmployeeRepositoryForJdbcTemplate;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

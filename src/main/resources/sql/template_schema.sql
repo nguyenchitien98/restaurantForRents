@@ -41,6 +41,13 @@ CREATE TABLE order_items (
                              FOREIGN KEY (menu_id) REFERENCES menus(id)
 );
 
+-- Loại Món ăn trong hóa đơn
+CREATE TABLE product_category (
+                                  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                  name VARCHAR(255) NOT NULL,
+                                  icon VARCHAR(255)
+);
+
 -- Nhân viên
 CREATE TABLE employees (
                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
