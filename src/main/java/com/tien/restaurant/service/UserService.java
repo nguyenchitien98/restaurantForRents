@@ -16,14 +16,12 @@ import java.util.Optional;
 
 @Service
 public class UserService {
-    public UserService(EmployeeRepository employeeRepository, EmployeeRepositoryForJdbcTemplate employeeRepositoryForJdbcTemplate, CentralEmployeeAccountRepository centralEmployeeAccountRepository) {
+    public UserService(EmployeeRepository employeeRepository, CentralEmployeeAccountRepository centralEmployeeAccountRepository) {
         this.employeeRepository = employeeRepository;
-        this.employeeRepositoryForJdbcTemplate = employeeRepositoryForJdbcTemplate;
         this.centralEmployeeAccountRepository = centralEmployeeAccountRepository;
     }
 
     private  final EmployeeRepository employeeRepository;
-    private final EmployeeRepositoryForJdbcTemplate employeeRepositoryForJdbcTemplate;
 
     @Qualifier("centralEmployeeAccountRepository")
     private final CentralEmployeeAccountRepository centralEmployeeAccountRepository;
