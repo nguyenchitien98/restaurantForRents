@@ -1,6 +1,6 @@
-package com.tien.restaurant.repository;
+package com.tien.restaurant.central.repository;
 
-import com.tien.restaurant.entity.EmployeeAccount;
+import com.tien.restaurant.central.entity.EmployeeAccount;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;

@@ -1,4 +1,4 @@
-package com.tien.restaurant.entity;
+package com.tien.restaurant.central.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

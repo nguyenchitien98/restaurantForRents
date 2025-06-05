@@ -25,4 +25,14 @@ public class TenantJdbcExecutor {
             return jdbcTemplate.queryForList(sql);
         }
     }
+
+    public List<Map<String, Object>> executeQueryWithParams(String sql, Object... params) throws SQLException {
+        String tenant = TenantContext.getTenant();
+        try (Connection connection = dataSource.getConnection()) {
+            connection.setCatalog(tenant); // chuyển schema theo tenant
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(new SingleConnectionDataSource(connection, true));
+            return jdbcTemplate.queryForList(sql, params);
+        }
+    }
+
 }

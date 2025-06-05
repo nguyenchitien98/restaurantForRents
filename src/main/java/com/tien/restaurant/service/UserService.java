@@ -2,24 +2,30 @@ package com.tien.restaurant.service;
 
 import com.tien.multitenancy.config.TenantContext;
 import com.tien.restaurant.dto.request.CreateEmployeeRequest;
-import com.tien.restaurant.dto.request.LoginRequest;
 import com.tien.restaurant.entity.Employee;
-import com.tien.restaurant.entity.EmployeeAccount;
+import com.tien.restaurant.central.entity.EmployeeAccount;
 import com.tien.restaurant.mapper.EmployeeMapper;
-import com.tien.restaurant.repository.CentralEmployeeAccountRepository;
+import com.tien.restaurant.central.repository.CentralEmployeeAccountRepository;
 import com.tien.restaurant.repository.EmployeeRepository;
-import com.tien.restaurant.security.JwtUtil;
+import com.tien.restaurant.repository.EmployeeRepositoryForJdbcTemplate;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class UserService {
+    public UserService(EmployeeRepository employeeRepository, EmployeeRepositoryForJdbcTemplate employeeRepositoryForJdbcTemplate, CentralEmployeeAccountRepository centralEmployeeAccountRepository) {
+        this.employeeRepository = employeeRepository;
+        this.employeeRepositoryForJdbcTemplate = employeeRepositoryForJdbcTemplate;
+        this.centralEmployeeAccountRepository = centralEmployeeAccountRepository;
+    }
 
-    private final EmployeeRepository employeeRepository;
+    private  final EmployeeRepository employeeRepository;
+    private final EmployeeRepositoryForJdbcTemplate employeeRepositoryForJdbcTemplate;
+
+    @Qualifier("centralEmployeeAccountRepository")
     private final CentralEmployeeAccountRepository centralEmployeeAccountRepository;
 
 //    public boolean authenticate(String email, String password) {
@@ -27,19 +33,29 @@ public class UserService {
 //        if (optAccount.isEmpty()) return false;
 //
 //        // 1. Set TenantContext
-//        String tenantId = optAccount.get().getTenantId();
-//        TenantContext.setTenant(tenantId);
+//        String tenantId = "restaurant_"+ optAccount.get().getTenantId();
+//        TenantContext.setTenant(tenantId); // giữ để dùng trong các chỗ khác nếu cần
+//        System.out.println(TenantContext.getTenant());
 //
-//        // 2. Kiểm tra password trong schema tenant
-//        return employeeRepository.findByEmail(email)
-//                .map(emp -> emp.getPassword().equals(password)) // hoặc dùng mã hóa
-//                .orElse(false);
+//        Optional<Employee> optEmp = employeeRepositoryForJdbcTemplate.findByEmail(email);
+//        if (optEmp.isEmpty()) return false;
+//
+//        return optEmp.get().getPassword().equals(password);
 //    }
 
-    public Optional<EmployeeAccount> findAccountFromCentral(String email) {
-        return centralEmployeeAccountRepository.findByEmail(email);
-    }
+    public boolean authenticate(String email, String password) {
+        Optional<EmployeeAccount> optAccount = centralEmployeeAccountRepository.findByEmail(email);
+        if (optAccount.isEmpty()) return false;
 
+        // 1. Set TenantContext
+        String tenantId = "restaurant_" + optAccount.get().getTenantId();
+        TenantContext.setTenant(tenantId);
+
+        // 2. Kiểm tra password trong schema tenant
+        return employeeRepository.findByEmail(email)
+                .map(emp -> emp.getPassword().equals(password)) // hoặc dùng mã hóa
+                .orElse(false);
+    }
 
 
     @Transactional
