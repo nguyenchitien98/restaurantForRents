@@ -23,7 +23,11 @@ public class Menu {
 
     private BigDecimal price;
 
-    private String category;
+    private String image;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private ProductCategory category;
 
     @Column(name = "is_available")
     private Boolean isAvailable = true;

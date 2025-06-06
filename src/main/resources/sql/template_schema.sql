@@ -2,14 +2,23 @@
 CREATE SCHEMA IF NOT EXISTS `${SCHEMA_NAME}`;
 USE `${SCHEMA_NAME}`;
 
+-- Loại Món ăn trong hóa đơn
+CREATE TABLE product_category (
+                                  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                  name VARCHAR(255) NOT NULL,
+                                  icon VARCHAR(255)
+);
+
 -- Thực đơn
 CREATE TABLE menus (
                        id BIGINT PRIMARY KEY AUTO_INCREMENT,
                        name VARCHAR(255) NOT NULL,
+                       image TEXT,
+                       category_id BIGINT
                        description TEXT,
                        price DECIMAL(10,2) NOT NULL,
-                       category VARCHAR(100),
-                       is_available BOOLEAN DEFAULT TRUE
+                       is_available BOOLEAN DEFAULT TRUE,
+                       FOREIGN KEY (category_id) REFERENCES product_category(id)
 );
 
 -- Bàn ăn
@@ -39,13 +48,6 @@ CREATE TABLE order_items (
                              price DECIMAL(10,2) NOT NULL,
                              FOREIGN KEY (order_id) REFERENCES orders(id),
                              FOREIGN KEY (menu_id) REFERENCES menus(id)
-);
-
--- Loại Món ăn trong hóa đơn
-CREATE TABLE product_category (
-                                  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                  name VARCHAR(255) NOT NULL,
-                                  icon VARCHAR(255)
 );
 
 -- Nhân viên
