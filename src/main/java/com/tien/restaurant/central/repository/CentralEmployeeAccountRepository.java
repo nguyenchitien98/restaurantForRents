@@ -12,4 +12,5 @@ import java.util.Optional;
 @Transactional(transactionManager = "centralTransactionManager")
 public interface CentralEmployeeAccountRepository extends JpaRepository<EmployeeAccount, Long> {
     Optional<EmployeeAccount> findByEmail(String email);
+    void deleteByEmail(String email);
 }

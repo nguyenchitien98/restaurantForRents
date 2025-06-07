@@ -54,7 +54,7 @@ CREATE TABLE order_items (
 CREATE TABLE employees (
                            id BIGINT AUTO_INCREMENT PRIMARY KEY,
                            name VARCHAR(100),
-                           role VARCHAR(50),
+                           role VARCHAR(50) ENUM('ADMIN', 'CASHIER', 'KITCHEN', 'WAITER') NOT NULL DEFAULT 'WAITER',
                            email VARCHAR(100) UNIQUE,
                            phone VARCHAR(20),
                            password VARCHAR(255),

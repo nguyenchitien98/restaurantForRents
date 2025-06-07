@@ -25,21 +25,6 @@ public class UserService {
     @Qualifier("centralEmployeeAccountRepository")
     private final CentralEmployeeAccountRepository centralEmployeeAccountRepository;
 
-//    public boolean authenticate(String email, String password) {
-//        Optional<EmployeeAccount> optAccount = centralEmployeeAccountRepository.findByEmail(email);
-//        if (optAccount.isEmpty()) return false;
-//
-//        // 1. Set TenantContext
-//        String tenantId = "restaurant_"+ optAccount.get().getTenantId();
-//        TenantContext.setTenant(tenantId); // giữ để dùng trong các chỗ khác nếu cần
-//        System.out.println(TenantContext.getTenant());
-//
-//        Optional<Employee> optEmp = employeeRepositoryForJdbcTemplate.findByEmail(email);
-//        if (optEmp.isEmpty()) return false;
-//
-//        return optEmp.get().getPassword().equals(password);
-//    }
-
     public boolean authenticate(String email, String password) {
         Optional<EmployeeAccount> optAccount = centralEmployeeAccountRepository.findByEmail(email);
         if (optAccount.isEmpty()) return false;
@@ -59,18 +44,6 @@ public class UserService {
     }
 
 
-    @Transactional
-    public void createEmployeeInTenantAndCentral(CreateEmployeeRequest request, String tenantId) {
-        // 1. Save vào tenant schema theo TenantContext
-        employeeRepository.save(EmployeeMapper.toEntity(request));
-
-        // 2. Save vào central_db qua repository dùng centralDataSource
-        EmployeeAccount account = new EmployeeAccount();
-        account.setEmail(request.getEmail());
-        account.setTenantId(tenantId);
-        centralEmployeeAccountRepository.save(account); // sẽ dùng EntityManager riêng
-    }
-
     public String getTenantIdByEmail(String email) {
         return centralEmployeeAccountRepository.findByEmail(email)
                 .map(EmployeeAccount::getTenantId)
@@ -84,8 +57,8 @@ public class UserService {
     }
 
     public String getRoleByEmail(String email) {
-        return employeeRepository.findByEmail(email)
+        return String.valueOf(employeeRepository.findByEmail(email)
                 .map(Employee::getRole)
-                .orElse(null);
+                .orElse(null));
     }
 }

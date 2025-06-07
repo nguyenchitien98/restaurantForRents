@@ -15,7 +15,8 @@ public class Employee {
 
     private String name;
 
-    private String role; // eg: ADMIN, CASHIER, KITCHEN
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.WAITER; // eg: ADMIN, CASHIER, KITCHEN, WAITER
 
     @Column(unique = true)
     private String email;
