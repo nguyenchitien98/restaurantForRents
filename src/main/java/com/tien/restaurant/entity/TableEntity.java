@@ -7,7 +7,7 @@ import lombok.Data;
 @Entity
 @Table(name = "tables")
 @Data
-public class DiningTable {
+public class TableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +18,7 @@ public class DiningTable {
 
     private Integer capacity;
 
-    @Column(name = "is_active")
-    private Boolean isActive = true;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TableStatus status = TableStatus.AVAILABLE;
 }

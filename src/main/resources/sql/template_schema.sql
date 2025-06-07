@@ -26,7 +26,7 @@ CREATE TABLE tables (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
                         table_number INT NOT NULL,
                         capacity INT,
-                        is_active BOOLEAN DEFAULT TRUE
+                        status VARCHAR(20) ENUM('AVAILABLE','RESERVED','OCCUPIED') NOT NULL DEFAULT 'AVAILABLE'
 );
 
 -- Hóa đơn
@@ -75,8 +75,8 @@ CREATE TABLE peripheral_devices (
                                     id BIGINT PRIMARY KEY AUTO_INCREMENT,
                                     name VARCHAR(100) NOT NULL,
                                     location nvarchar(100) NOT NULL,
-                                    type ENUM('printer', 'cash_drawer', 'customer_display') NOT NULL,
-                                    status ENUM('connected', 'disconnected', 'error') DEFAULT 'disconnected',
+                                    type ENUM('PRINTER', 'CASH_DRAWER', 'CUSTOMER_DISPLAY') NOT NULL,
+                                    status ENUM('CONNECTED', 'DISCONNECTED', 'ERROR') DEFAULT 'DISCONNECTED',
                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

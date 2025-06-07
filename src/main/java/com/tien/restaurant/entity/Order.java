@@ -20,7 +20,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "table_id")
-    private DiningTable table;
+    private TableEntity table;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
