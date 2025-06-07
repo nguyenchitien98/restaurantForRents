@@ -1,26 +1,26 @@
 package com.tien.restaurant.service;
 
 import com.tien.multitenancy.config.TenantContext;
+import com.tien.restaurant.central.repository.CentralEmployeeAccountRepository;
 import com.tien.restaurant.dto.request.CreateEmployeeRequest;
 import com.tien.restaurant.entity.Employee;
 import com.tien.restaurant.central.entity.EmployeeAccount;
 import com.tien.restaurant.mapper.EmployeeMapper;
-import com.tien.restaurant.central.repository.CentralEmployeeAccountRepository;
 import com.tien.restaurant.repository.EmployeeRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
 public class UserService {
-    public UserService(EmployeeRepository employeeRepository, CentralEmployeeAccountRepository centralEmployeeAccountRepository) {
+
+    public UserService( EmployeeRepository employeeRepository, CentralEmployeeAccountRepository centralEmployeeAccountRepository) {
         this.employeeRepository = employeeRepository;
         this.centralEmployeeAccountRepository = centralEmployeeAccountRepository;
     }
 
-    private  final EmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Qualifier("centralEmployeeAccountRepository")
     private final CentralEmployeeAccountRepository centralEmployeeAccountRepository;
@@ -46,7 +46,11 @@ public class UserService {
 
         // 1. Set TenantContext
         String tenantId = "restaurant_" + optAccount.get().getTenantId();
+//        String tenantId = optAccount.get().getTenantId();
         TenantContext.setTenant(tenantId);
+        String tenant_Id =TenantContext.getTenant();
+        System.out.println("1111: "+tenantId);
+        System.out.println("2222: "+tenant_Id);
 
         // 2. Kiểm tra password trong schema tenant
         return employeeRepository.findByEmail(email)
@@ -64,7 +68,6 @@ public class UserService {
         EmployeeAccount account = new EmployeeAccount();
         account.setEmail(request.getEmail());
         account.setTenantId(tenantId);
-        account.setAgentId(request.getAgentId());
         centralEmployeeAccountRepository.save(account); // sẽ dùng EntityManager riêng
     }
 
@@ -75,8 +78,8 @@ public class UserService {
     }
 
     public String getAgentIdByEmail(String email) {
-        return centralEmployeeAccountRepository.findByEmail(email)
-                .map(EmployeeAccount::getAgentId)
+        return employeeRepository.findByEmail(email)
+                .map(Employee::getAgentId)
                 .orElse(null);
     }
 

@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("rawtypes")
 public class SchemaMultiTenantConnectionProvider implements MultiTenantConnectionProvider {
 
     private final DataSource dataSource;
-    private final Map<String, Connection> tenantConnectionCache = new ConcurrentHashMap<>();
 
     public SchemaMultiTenantConnectionProvider(DataSource dataSource) {
         this.dataSource = dataSource;

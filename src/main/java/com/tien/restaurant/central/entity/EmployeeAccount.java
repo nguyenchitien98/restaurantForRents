@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 // EmployeeAccount.java (entity cho central_db)
 @Entity
 @Getter
@@ -23,6 +25,6 @@ public class EmployeeAccount {
     @Column(name = "tenant_id")
     private String tenantId;
 
-    @Column(name = "agent_id")
-    private String agentId;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt = LocalDateTime.now();
 }

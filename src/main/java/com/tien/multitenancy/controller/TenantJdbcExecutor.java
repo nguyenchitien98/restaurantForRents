@@ -28,8 +28,10 @@ public class TenantJdbcExecutor {
 
     public List<Map<String, Object>> executeQueryWithParams(String sql, Object... params) throws SQLException {
         String tenant = TenantContext.getTenant();
+        System.out.println("tenant11111:"+tenant);
         try (Connection connection = dataSource.getConnection()) {
             connection.setCatalog(tenant); // chuyển schema theo tenant
+            System.out.println("Current catalog/schema: " + connection.getCatalog());
             JdbcTemplate jdbcTemplate = new JdbcTemplate(new SingleConnectionDataSource(connection, true));
             return jdbcTemplate.queryForList(sql, params);
         }

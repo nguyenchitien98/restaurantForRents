@@ -2,8 +2,11 @@ package com.tien.restaurant.central.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -20,9 +23,17 @@ import java.util.Map;
         entityManagerFactoryRef = "centralEntityManagerFactory",
         transactionManagerRef = "centralTransactionManager"
 )
-public class CentralDbConfig {
+public class CentralDataSourceConfig {
+
+    @Bean(name = "centralDataSource")
+    @Primary
+    @ConfigurationProperties(prefix = "spring.datasource.central")
+    public DataSource centralDataSource() {
+        return DataSourceBuilder.create().build();
+    }
 
     @Bean(name = "centralEntityManagerFactory")
+    @Primary
     public LocalContainerEntityManagerFactoryBean centralEntityManagerFactory(
             @Qualifier("centralDataSource") DataSource dataSource
     ) {
@@ -41,6 +52,7 @@ public class CentralDbConfig {
     }
 
     @Bean(name = "centralTransactionManager")
+    @Primary
     public PlatformTransactionManager centralTransactionManager(
             @Qualifier("centralEntityManagerFactory") EntityManagerFactory emf
     ) {
