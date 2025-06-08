@@ -13,6 +13,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     @Query("SELECT m.name FROM OrderItem oi JOIN oi.menu m GROUP BY m.name ORDER BY SUM(oi.quantity) DESC")
     List<String> findTopSellingMenus(Pageable pageable);
 
+    List<OrderItem> findByOrderId(Long orderId);
+
     default String findBestSellingMenuName() {
         List<String> top = findTopSellingMenus(PageRequest.of(0, 1));
         return top.isEmpty() ? "Chưa có dữ liệu" : top.get(0);

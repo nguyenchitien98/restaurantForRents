@@ -28,4 +28,7 @@ public class OrderItem {
     private Integer quantity;
 
     private BigDecimal price;
+
+    @Enumerated(EnumType.STRING)
+    private OrderItemStatus status;
 }

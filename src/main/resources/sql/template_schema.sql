@@ -35,7 +35,7 @@ CREATE TABLE orders (
                         table_id BIGINT,
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                         total_amount DECIMAL(10,2),
-                        status VARCHAR(50) DEFAULT 'OPEN',
+                        status ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'PENDING',
                         FOREIGN KEY (table_id) REFERENCES tables(id)
 );
 
@@ -46,8 +46,25 @@ CREATE TABLE order_items (
                              menu_id BIGINT NOT NULL,
                              quantity INT NOT NULL,
                              price DECIMAL(10,2) NOT NULL,
+                             status ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'PENDING',
                              FOREIGN KEY (order_id) REFERENCES orders(id),
                              FOREIGN KEY (menu_id) REFERENCES menus(id)
+);
+
+-- bếp
+CREATE TABLE kitchen_orders (
+                                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                order_id BIGINT NOT NULL,
+                                order_item_id BIGINT NOT NULL,
+                                item_name VARCHAR(255) NOT NULL,
+                                quantity INT NOT NULL,
+                                status ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'PENDING',
+                                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                                updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    -- Indexes for fast lookup
+                                INDEX idx_order_id (order_id),
+                                INDEX idx_order_item_id (order_item_id)
 );
 
 -- Nhân viên
