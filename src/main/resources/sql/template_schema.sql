@@ -110,3 +110,12 @@ CREATE TABLE connection_strategies (
 
                                        CONSTRAINT fk_device FOREIGN KEY (device_id) REFERENCES peripheral_devices(id) ON DELETE CASCADE
 );
+
+-- thông báo
+CREATE TABLE notifications (
+                               id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                               message TEXT NOT NULL,
+                               type ENUM('STORE', 'KITCHEN', 'COUNTER') NOT NULL,
+                               is_read BOOLEAN DEFAULT FALSE,
+                               created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
