@@ -19,4 +19,6 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
         List<String> top = findTopSellingMenus(PageRequest.of(0, 1));
         return top.isEmpty() ? "Chưa có dữ liệu" : top.get(0);
     }
+
+    List<OrderItem> findByOrderIdIn(List<Long> orderIds);
 }

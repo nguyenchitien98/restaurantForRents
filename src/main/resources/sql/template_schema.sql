@@ -35,7 +35,7 @@ CREATE TABLE orders (
                         table_id BIGINT,
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                         total_amount DECIMAL(10,2),
-                        status ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'PENDING',
+                        status ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED','CANCELLED') DEFAULT 'PENDING',
                         FOREIGN KEY (table_id) REFERENCES tables(id)
 );
 
