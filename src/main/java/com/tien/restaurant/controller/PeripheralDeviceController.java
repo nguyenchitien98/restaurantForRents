@@ -1,11 +1,10 @@
 package com.tien.restaurant.controller;
 
-import com.tien.restaurant.dto.PeripheralDeviceDTO;
+import com.tien.restaurant.dto.response.PeripheralDeviceResponse;
 import com.tien.restaurant.dto.request.ConnectionCheckRequest;
 import com.tien.restaurant.dto.request.CreatePeripheralDeviceRequest;
 import com.tien.restaurant.dto.request.UpdatePeripheralDeviceRequest;
 import com.tien.restaurant.entity.ConnectionStrategy;
-import com.tien.restaurant.entity.PeripheralDevice;
 import com.tien.restaurant.service.PeripheralDeviceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,22 +41,22 @@ public class PeripheralDeviceController {
 
     // Devices
     @GetMapping
-    public ResponseEntity<List<PeripheralDeviceDTO>> getAll() {
+    public ResponseEntity<List<PeripheralDeviceResponse>> getAll() {
         return ResponseEntity.ok(deviceService.getAllDevices());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PeripheralDeviceDTO> getById(@PathVariable Long id) {
+    public ResponseEntity<PeripheralDeviceResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(deviceService.getById(id));
     }
 
     @PostMapping
-    public ResponseEntity<PeripheralDeviceDTO> create(@RequestBody CreatePeripheralDeviceRequest request) {
+    public ResponseEntity<PeripheralDeviceResponse> create(@RequestBody CreatePeripheralDeviceRequest request) {
         return ResponseEntity.ok(deviceService.createDevice(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PeripheralDeviceDTO> update(@PathVariable Long id, @RequestBody UpdatePeripheralDeviceRequest request) {
+    public ResponseEntity<PeripheralDeviceResponse> update(@PathVariable Long id, @RequestBody UpdatePeripheralDeviceRequest request) {
         return ResponseEntity.ok(deviceService.updateDevice(id, request));
     }
 

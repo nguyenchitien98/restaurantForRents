@@ -1,7 +1,7 @@
 package com.tien.restaurant.mapper;
 
-import com.tien.restaurant.dto.ConnectionStrategyDTO;
-import com.tien.restaurant.dto.PeripheralDeviceDTO;
+import com.tien.restaurant.dto.response.ConnectionStrategyResponse;
+import com.tien.restaurant.dto.response.PeripheralDeviceResponse;
 import com.tien.restaurant.dto.request.ConnectionStrategyRequest;
 import com.tien.restaurant.dto.request.CreatePeripheralDeviceRequest;
 import com.tien.restaurant.dto.request.UpdatePeripheralDeviceRequest;
@@ -9,10 +9,10 @@ import com.tien.restaurant.entity.*;
 
 public class PeripheralDeviceMapper {
 
-    public static PeripheralDeviceDTO toDTO(PeripheralDevice entity) {
+    public static PeripheralDeviceResponse toDTO(PeripheralDevice entity) {
         if (entity == null) return null;
 
-        PeripheralDeviceDTO dto = new PeripheralDeviceDTO();
+        PeripheralDeviceResponse dto = new PeripheralDeviceResponse();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         dto.setLocation(entity.getLocation());
@@ -29,10 +29,10 @@ public class PeripheralDeviceMapper {
         return dto;
     }
 
-    public static ConnectionStrategyDTO toDTO(ConnectionStrategy entity) {
+    public static ConnectionStrategyResponse toDTO(ConnectionStrategy entity) {
         if (entity == null) return null;
 
-        ConnectionStrategyDTO dto = new ConnectionStrategyDTO();
+        ConnectionStrategyResponse dto = new ConnectionStrategyResponse();
         dto.setId(entity.getId());
         dto.setConnectionType(entity.getConnectionType().name()); // Enum to String
         dto.setIpAddress(entity.getIpAddress());

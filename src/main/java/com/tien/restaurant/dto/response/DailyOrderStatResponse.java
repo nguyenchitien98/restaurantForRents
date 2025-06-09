@@ -1,4 +1,4 @@
-package com.tien.restaurant.dto;
+package com.tien.restaurant.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DailyOrderStat {
+public class DailyOrderStatResponse {
     private Date name;
     private long orders;
 }

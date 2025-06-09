@@ -1,7 +1,7 @@
 package com.tien.restaurant.service;
 
-import com.tien.restaurant.dto.DailyOrderStat;
-import com.tien.restaurant.dto.DashboardStat;
+import com.tien.restaurant.dto.response.DailyOrderStatResponse;
+import com.tien.restaurant.dto.response.DashboardStatResponse;
 import com.tien.restaurant.repository.OrderItemRepository;
 import com.tien.restaurant.repository.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -20,21 +20,21 @@ public class DashboardService {
         this.orderItemRepository = orderItemRepository;
     }
 
-    public List<DashboardStat> getDashboardSummary() {
+    public List<DashboardStatResponse> getDashboardSummary() {
         long todayOrders = orderRepository.countOrdersToday();
         BigDecimal todayRevenue = orderRepository.sumRevenueToday();
         String bestSelling = orderItemRepository.findBestSellingMenuName();
         String kitchenStatus = "3/4 bếp"; // hardcoded for now
 
         return List.of(
-                new DashboardStat("Đơn hàng hôm nay", String.valueOf(todayOrders), "shopping"),
-                new DashboardStat("Doanh thu hôm nay", todayRevenue + "đ", "money"),
-                new DashboardStat("Món bán chạy", bestSelling, "coffee"),
-                new DashboardStat("Bếp đang hoạt động", kitchenStatus, "flame")
+                new DashboardStatResponse("Đơn hàng hôm nay", String.valueOf(todayOrders), "shopping"),
+                new DashboardStatResponse("Doanh thu hôm nay", todayRevenue + "đ", "money"),
+                new DashboardStatResponse("Món bán chạy", bestSelling, "coffee"),
+                new DashboardStatResponse("Bếp đang hoạt động", kitchenStatus, "flame")
         );
     }
 
-    public List<DailyOrderStat> getOrdersPerDay() {
+    public List<DailyOrderStatResponse> getOrdersPerDay() {
         return orderRepository.getOrdersPerLast7Days();
     }
 }

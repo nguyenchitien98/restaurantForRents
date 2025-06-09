@@ -1,7 +1,7 @@
 package com.tien.restaurant.service;
 
 import com.tien.multitenancy.config.TenantContext;
-import com.tien.restaurant.dto.PeripheralDeviceDTO;
+import com.tien.restaurant.dto.response.PeripheralDeviceResponse;
 import com.tien.restaurant.dto.request.ConnectionCheckRequest;
 import com.tien.restaurant.dto.request.CreatePeripheralDeviceRequest;
 import com.tien.restaurant.dto.request.UpdatePeripheralDeviceRequest;
@@ -13,7 +13,6 @@ import com.tien.restaurant.mapper.PeripheralDeviceMapper;
 import com.tien.restaurant.repository.ConnectionStrategyRepository;
 import com.tien.restaurant.repository.PeripheralDeviceRepository;
 import com.tien.tenant.service.TenantService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,21 +28,21 @@ public class PeripheralDeviceService {
     private final ConnectionStrategyRepository connectionRepository;
     private final TenantService tenantPlanService;
 
-    public List<PeripheralDeviceDTO> getAllDevices() {
+    public List<PeripheralDeviceResponse> getAllDevices() {
         return deviceRepository.findAll()
                 .stream()
                 .map(PeripheralDeviceMapper::toDTO)
                 .toList();
     }
 
-    public PeripheralDeviceDTO getById(Long id) {
+    public PeripheralDeviceResponse getById(Long id) {
         PeripheralDevice device = deviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy thiết bị"));
         return PeripheralDeviceMapper.toDTO(device);
     }
 
     @Transactional
-    public PeripheralDeviceDTO createDevice(CreatePeripheralDeviceRequest request) {
+    public PeripheralDeviceResponse createDevice(CreatePeripheralDeviceRequest request) {
         String tenantId = TenantContext.getTenant();
         String plan = tenantPlanService.getPlanByTenantId(tenantId);
 
@@ -68,7 +67,7 @@ public class PeripheralDeviceService {
     }
 
     @Transactional
-    public PeripheralDeviceDTO updateDevice(Long id, UpdatePeripheralDeviceRequest request) {
+    public PeripheralDeviceResponse updateDevice(Long id, UpdatePeripheralDeviceRequest request) {
         PeripheralDevice device = deviceRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy thiết bị"));
 

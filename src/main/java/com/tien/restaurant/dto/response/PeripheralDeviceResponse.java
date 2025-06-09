@@ -1,11 +1,11 @@
-package com.tien.restaurant.dto;
+package com.tien.restaurant.dto.response;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class PeripheralDeviceDTO {
+public class PeripheralDeviceResponse {
     private Long id;
     private String name;
     private String location;
@@ -14,5 +14,5 @@ public class PeripheralDeviceDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    private ConnectionStrategyDTO connection; // thông tin kết nối đi kèm
+    private ConnectionStrategyResponse connection; // thông tin kết nối đi kèm
 }

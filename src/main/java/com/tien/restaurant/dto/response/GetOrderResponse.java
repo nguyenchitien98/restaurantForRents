@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Data
-public class OrderResponseDTO {
+public class GetOrderResponse {
     private Long id;
     private String status;
     private BigDecimal totalAmount;

@@ -1,5 +1,6 @@
 package com.tien.restaurant.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.BatchSize;
@@ -19,15 +20,19 @@ public class OrderItem {
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonBackReference
     private Order order;
 
     @ManyToOne
     @JoinColumn(name = "menu_id")
+    @JsonBackReference
     private Menu menu;
 
     private Integer quantity;
 
     private BigDecimal price;
+
+    private String note;
 
     @Enumerated(EnumType.STRING)
     private OrderItemStatus status;

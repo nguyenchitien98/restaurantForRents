@@ -1,7 +1,7 @@
 package com.tien.restaurant.controller;
 
-import com.tien.restaurant.dto.DailyOrderStat;
-import com.tien.restaurant.dto.DashboardStat;
+import com.tien.restaurant.dto.response.DailyOrderStatResponse;
+import com.tien.restaurant.dto.response.DashboardStatResponse;
 import com.tien.restaurant.service.DashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,12 +21,12 @@ public class DashboardController {
     }
 
     @GetMapping("/summary")
-    public ResponseEntity<List<DashboardStat>> getSummary() {
+    public ResponseEntity<List<DashboardStatResponse>> getSummary() {
         return ResponseEntity.ok(dashboardService.getDashboardSummary());
     }
 
     @GetMapping("/orders-per-day")
-    public ResponseEntity<List<DailyOrderStat>> getOrdersPerDay() {
+    public ResponseEntity<List<DailyOrderStatResponse>> getOrdersPerDay() {
         return ResponseEntity.ok(dashboardService.getOrdersPerDay());
     }
 }

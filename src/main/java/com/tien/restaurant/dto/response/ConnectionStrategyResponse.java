@@ -1,9 +1,9 @@
-package com.tien.restaurant.dto;
+package com.tien.restaurant.dto.response;
 
 import lombok.Data;
 
 @Data
-public class ConnectionStrategyDTO {
+public class ConnectionStrategyResponse {
     private Long id;
     private String connectionType; // LAN, USB, AGENT
     private String ipAddress;

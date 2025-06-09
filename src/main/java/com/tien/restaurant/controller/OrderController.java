@@ -1,7 +1,10 @@
 package com.tien.restaurant.controller;
-import com.tien.restaurant.dto.response.OrderResponseDTO;
+import com.tien.restaurant.dto.request.CreateOrderRequest;
+import com.tien.restaurant.dto.response.OrderResponse;
+import com.tien.restaurant.dto.response.GetOrderResponse;
 import com.tien.restaurant.entity.Order;
 import com.tien.restaurant.entity.OrderStatus;
+import com.tien.restaurant.mapper.OrderMapper;
 import com.tien.restaurant.service.OrderService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +22,16 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @PostMapping
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody CreateOrderRequest dto) {
+        Order order = orderService.createOrder(dto);
+        OrderResponse responseDTO = OrderMapper.convertToDTO(order);
+        return ResponseEntity.ok(responseDTO);
+    }
+
     // Lấy đơn theo khoảng thời gian và trạng thái
     @GetMapping
-    public ResponseEntity<List<OrderResponseDTO>> getOrders(
+    public ResponseEntity<List<GetOrderResponse>> getOrders(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to,
             @RequestParam List<OrderStatus> statuses

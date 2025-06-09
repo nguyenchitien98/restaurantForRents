@@ -21,6 +21,28 @@ CREATE TABLE menus (
                        FOREIGN KEY (category_id) REFERENCES product_category(id)
 );
 
+-- Kho
+CREATE TABLE inventory_items (
+                                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                 name VARCHAR(255) NOT NULL,
+                                 quantity DECIMAL(10, 2) NOT NULL DEFAULT 0, -- Số lượng tồn
+                                 unit VARCHAR(50) NOT NULL,                 -- Đơn vị: kg, lon, ml...
+                                 category VARCHAR(100),                     -- Loại: nguyên liệu, vật tư...
+                                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- bảng trung gian
+CREATE TABLE menu_ingredients (
+                                  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                  menu_id BIGINT NOT NULL,
+                                  inventory_item_id BIGINT NOT NULL,
+                                  quantity DECIMAL(10, 2) NOT NULL, -- số lượng nguyên liệu cần cho 1 món
+                                  unit VARCHAR(50),
+                                  FOREIGN KEY (menu_id) REFERENCES menus(id),
+                                  FOREIGN KEY (inventory_item_id) REFERENCES inventory_items(id)
+);
+
 -- Bàn ăn
 CREATE TABLE tables (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -33,10 +55,23 @@ CREATE TABLE tables (
 CREATE TABLE orders (
                         id BIGINT PRIMARY KEY AUTO_INCREMENT,
                         table_id BIGINT,
+                        employee_id BIGINT NULL,
+                        order_type ENUM('DINE_IN', 'TAKE_AWAY', 'DELIVERY') DEFAULT 'DINE_IN',
+
+    -- Thông tin khách hàng (dùng cho DELIVERY)
+                        customer_name VARCHAR(255),
+                        phone_number VARCHAR(20),
+                        delivery_address TEXT,
+
+    -- Ghi chú chung đơn hàng
+                        note TEXT,
+
                         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                         total_amount DECIMAL(10,2),
                         status ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED','CANCELLED') DEFAULT 'PENDING',
-                        FOREIGN KEY (table_id) REFERENCES tables(id)
+
+                        FOREIGN KEY (table_id) REFERENCES tables(id),
+                        FOREIGN KEY (employee_id) REFERENCES employees(id)
 );
 
 -- Món ăn trong hóa đơn
@@ -46,6 +81,7 @@ CREATE TABLE order_items (
                              menu_id BIGINT NOT NULL,
                              quantity INT NOT NULL,
                              price DECIMAL(10,2) NOT NULL,
+                             note TEXT,
                              status ENUM('PENDING', 'IN_PROGRESS', 'COMPLETED') DEFAULT 'PENDING',
                              FOREIGN KEY (order_id) REFERENCES orders(id),
                              FOREIGN KEY (menu_id) REFERENCES menus(id)

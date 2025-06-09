@@ -1,17 +1,12 @@
 package com.tien.restaurant.controller;
 
-import com.tien.restaurant.dto.response.KitchenOrderResponseDTO;
+import com.tien.restaurant.dto.response.KitchenOrderResponse;
 import com.tien.restaurant.entity.KitchenOrder;
 import com.tien.restaurant.entity.KitchenStatus;
-import com.tien.restaurant.repository.KitchenOrderRepository;
 import com.tien.restaurant.service.KitchenOrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +17,7 @@ public class KitchenOrderController {
      private final KitchenOrderService kitchenService;
 
     @GetMapping
-    public List<KitchenOrderResponseDTO> getAll() {
+    public List<KitchenOrderResponse> getAll() {
         return kitchenService.getAll();
     }
 

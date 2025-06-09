@@ -1,6 +1,6 @@
 package com.tien.restaurant.service;
 
-import com.tien.restaurant.dto.response.KitchenOrderResponseDTO;
+import com.tien.restaurant.dto.response.KitchenOrderResponse;
 import com.tien.restaurant.entity.*;
 import com.tien.restaurant.repository.KitchenOrderRepository;
 import com.tien.restaurant.repository.OrderItemRepository;
@@ -16,7 +16,7 @@ public class KitchenOrderService {
      private final OrderItemRepository itemRepo;
      private final OrderRepository orderRepo;
 
-    public List<KitchenOrderResponseDTO> getAll() {
+    public List<KitchenOrderResponse> getAll() {
         return kitchenRepo.findAllKitchenOrdersWithOrderInfo();
     }
 

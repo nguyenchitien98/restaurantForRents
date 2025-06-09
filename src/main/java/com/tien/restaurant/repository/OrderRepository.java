@@ -1,6 +1,6 @@
 package com.tien.restaurant.repository;
 
-import com.tien.restaurant.dto.DailyOrderStat;
+import com.tien.restaurant.dto.response.DailyOrderStatResponse;
 import com.tien.restaurant.entity.Order;
 import com.tien.restaurant.entity.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,7 +23,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE created_at >= CURDATE() - INTERVAL 7 DAY " +
             "GROUP BY DATE(created_at) " +
             "ORDER BY DATE(created_at)", nativeQuery = true)
-    List<DailyOrderStat> getOrdersPerLast7Days();
+    List<DailyOrderStatResponse> getOrdersPerLast7Days();
 
     // Lấy đơn theo khoảng thời gian và trạng thái
     List<Order> findByCreatedAtBetweenAndStatusIn(LocalDateTime from, LocalDateTime to, List<OrderStatus> statuses);
