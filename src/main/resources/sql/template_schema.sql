@@ -155,3 +155,16 @@ CREATE TABLE notifications (
                                is_read BOOLEAN DEFAULT FALSE,
                                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Hướng dẫn làm đồ/món ăn, nước uống
+CREATE TABLE tutorials (
+                           id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                           title VARCHAR(255) NOT NULL,
+                           category VARCHAR(100) NOT NULL,
+                           description TEXT,
+                           image TEXT,
+                           ingredients TEXT, -- Chuỗi: các nguyên liệu cách nhau bằng dấu chấm hoặc xuống dòng
+                           steps TEXT,       -- Chuỗi: các bước cách nhau bằng dấu chấm hoặc xuống dòng
+                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
